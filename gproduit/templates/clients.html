@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Clients</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        .client-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: white;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: none;
+            margin: 2px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view { background: #007bff; color: white; }
+        .btn-edit { background: #ffc107; color: #212529; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-contact { background: #28a745; color: white; }
+        .btn-history { background: #6f42c1; color: white; }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .client-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-active { background: #28a745; color: white; }
+        .status-inactive { background: #6c757d; color: white; }
+        .status-vip { background: #ffc107; color: #212529; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-icon">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M507.606 371.054a187.217 187.217 0 00-23.051-19.606c-17.316 19.999-37.648 36.808-60.572 50.041-35.508 20.505-75.893 31.452-116.875 31.711 21.762 8.776 45.224 13.38 69.396 13.38 49.524 0 96.084-19.286 131.103-54.305a15 15 0 004.394-10.606 15.028 15.028 0 00-4.395-10.615zM27.445 351.448a187.392 187.392 0 00-23.051 19.606C1.581 373.868 0 377.691 0 381.669s1.581 7.793 4.394 10.606c35.019 35.019 81.579 54.305 131.103 54.305 24.172 0 47.634-4.604 69.396-13.38-40.985-.259-81.367-11.206-116.879-31.713-22.922-13.231-43.254-30.04-60.569-50.039z"/>
+                    </svg>
+                </div>
+            </div>
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        <span>Produits</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'personnel' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Personnel</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'listevente' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                            <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                        </svg>
+                        <span>Ventes</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item active">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="app-content">
+            <div class="app-content-header">
+                <h1 class="app-content-headerText">Gestion des Clients</h1>
+                <button class="app-content-headerButton">
+                    <a href="#" class="lien">Ajouter un client</a>
+                </button>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ total_clients }}</h4>
+                        <p>Total Clients</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ clients_actifs }}</h4>
+                        <p>Clients Actifs</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ total_achats|floatformat:0 }}</h4>
+                        <p>Total Achats (FCFA)</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ moyenne_achat|floatformat:0 }}</h4>
+                        <p>Moyenne par Client</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un client...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="filterStatus">
+                            <option value="">Tous les statuts</option>
+                            <option value="active">Actif</option>
+                            <option value="inactive">Inactif</option>
+                            <option value="vip">VIP</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary" onclick="exporterClients()">
+                            <i class="fas fa-download"></i> Exporter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clients Table -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Téléphone</th>
+                                <th>Total Achats</th>
+                                <th>Dernier Achat</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients %}
+                            <tr>
+                                <td>
+                                    <div class="client-avatar">
+                                        {{ client.nom|first }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>{{ client.nom }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="tel:{{ client.Tel }}" class="text-primary">
+                                        <i class="fas fa-phone"></i> {{ client.Tel }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <strong>{{ client.total_achats|floatformat:0 }} FCFA</strong>
+                                </td>
+                                <td>
+                                    {% if client.dernier_achat %}
+                                        {{ client.dernier_achat|date:"d/m/Y" }}
+                                    {% else %}
+                                        <span class="text-muted">Aucun achat</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if client.total_achats > 100000 %}
+                                        <span class="status-badge status-vip">VIP</span>
+                                    {% elif client.total_achats > 0 %}
+                                        <span class="status-badge status-active">Actif</span>
+                                    {% else %}
+                                        <span class="status-badge status-inactive">Inactif</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="action-btn btn-view" onclick="voirClient({{ client.id }})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" onclick="modifierClient({{ client.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-history" onclick="voirHistorique({{ client.id }})">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                    <button class="action-btn btn-contact" onclick="contacterClient('{{ client.Tel }}')">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="supprimerClient({{ client.id }}, '{{ client.nom }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> Aucun client trouvé
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour voir les détails d'un client -->
+    <div class="modal fade" id="modalClient" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails du client</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalClientBody">
+                    <!-- Contenu dynamique -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour voir l'historique d'achat -->
+    <div class="modal fade" id="modalHistorique" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Historique d'achat du client</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalHistoriqueBody">
+                    <!-- Contenu dynamique -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="modalSuppressionClient" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer le client <strong id="nomClient"></strong> ?</p>
+                    <p><strong>Attention :</strong> Cette action supprimera également tous les achats associés.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <form method="post" id="formSuppressionClient">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="supprimer_client">
+                        <input type="hidden" name="client_id" id="clientId">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script>
+        // Fonction de recherche
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Filtres
+        document.getElementById('filterStatus').addEventListener('change', function() {
+            const status = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(6)');
+                if (status === '' || statusCell.textContent.toLowerCase().includes(status)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Fonction pour voir les détails d'un client
+        function voirClient(id) {
+            // Ici vous pouvez ajouter une requête AJAX pour récupérer les détails
+            $('#modalClient').modal('show');
+        }
+
+        // Fonction pour modifier un client
+        function modifierClient(id) {
+            window.location.href = `/clients/modifier/${id}/`;
+        }
+
+        // Fonction pour voir l'historique d'achat
+        function voirHistorique(id) {
+            // Ici vous pouvez ajouter une requête AJAX pour récupérer l'historique
+            $('#modalHistorique').modal('show');
+        }
+
+        // Fonction pour contacter un client
+        function contacterClient(telephone) {
+            const choix = confirm(`Voulez-vous appeler le client au ${telephone} ?`);
+            
+            if (choix) {
+                window.open(`tel:${telephone}`, '_blank');
+            }
+        }
+
+        // Fonction pour supprimer un client
+        function supprimerClient(id, nom) {
+            document.getElementById('nomClient').textContent = nom;
+            document.getElementById('clientId').value = id;
+            $('#modalSuppressionClient').modal('show');
+        }
+
+        // Fonction pour exporter les clients
+        function exporterClients() {
+            // Ici vous pouvez ajouter la logique d'export
+            alert('Fonctionnalité d\'export en cours de développement');
+        }
+    </script>
+</body>
+</html> 

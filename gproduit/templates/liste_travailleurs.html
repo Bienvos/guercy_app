@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Travailleurs</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background-color: #6f42c1;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center text-primary mb-4">Liste des Travailleurs</h3>
+
+    <a href="{% url 'ajouter_personnel' %}" class="btn btn-success mb-3"><i class="fa fa-plus"></i> Ajouter un Travailleur</a>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Naissance</th>
+                <th>Contact</th>
+                <th>Embauche</th>
+                <th>Fonction</th>
+                <th>Salaire</th>
+                <th>Type</th>
+                <th>Jours Travaillés</th>
+                <th>Absences</th>
+                <th>Observation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in travailleurs %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ t.nom }}</td>
+                <td>{{ t.prenom }}</td>
+                <td>{{ t.date_naissance }}</td>
+                <td>{{ t.contact }}</td>
+                <td>{{ t.date_embauche }}</td>
+                <td>{{ t.fonction }}</td>
+                <td>{{ t.salaire }} FCFA</td>
+                <td>{{ t.renumeration_type }}</td>
+                <td>{{ t.jours_travailles }}</td>
+                <td>{{ t.jours_absence }}</td>
+                <td>{{ t.observation }}</td>
+                <td>
+                    <a href="{% url 'modifier_travailleur' t.id %}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                    <a href="{% url 'supprimer_travailleur' t.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce travailleur ?');"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="13" class="text-center text-muted">Aucun travailleur enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+</body>
+</html>

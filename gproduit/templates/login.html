@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Gestion Stock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            min-height: 600px;
+        }
+
+        .login-sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+        }
+
+        .login-form {
+            padding: 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background: white;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            z-index: 10;
+        }
+
+        .form-control.with-icon {
+            padding-left: 50px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .sidebar-content h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .sidebar-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .feature-item i {
+            margin-right: 10px;
+            color: #4facfe;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                margin: 20px;
+            }
+            
+            .login-sidebar {
+                padding: 30px 20px;
+            }
+            
+            .login-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Sidebar avec informations -->
+        <div class="login-sidebar">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="sidebar-content">
+                <h3>Gestion Stock Pro</h3>
+                <p>Plateforme complète de gestion d'inventaire et de vente pour votre entreprise</p>
+                
+                <div class="features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Gestion des produits et stock</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Suivi des ventes</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Gestion du personnel</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Rapports et analyses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire de connexion -->
+        <div class="login-form">
+            <div class="form-header">
+                <h2>Connexion</h2>
+                <p>Connectez-vous à votre compte pour accéder au système</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Erreur de connexion :</strong>
+                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" 
+                           class="form-control with-icon" 
+                           id="username" 
+                           name="username" 
+                           placeholder="Nom d'utilisateur"
+                           value="{% if form.username.value %}{{ form.username.value }}{% endif %}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" 
+                           class="form-control with-icon" 
+                           id="password" 
+                           name="password" 
+                           placeholder="Mot de passe"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p>Pas encore de compte ? <a href="#">Créer un compte</a></p>
+                <p><a href="#">Mot de passe oublié ?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script>
+        // Animation d'entrée
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.login-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Validation du formulaire
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return false;
+            }
+        });
+
+        // Animation des champs
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Afficher/masquer le mot de passe
+        const passwordField = document.getElementById('password');
+        const togglePassword = document.createElement('i');
+        togglePassword.className = 'fas fa-eye input-icon';
+        togglePassword.style.right = '15px';
+        togglePassword.style.left = 'auto';
+        togglePassword.style.cursor = 'pointer';
+        togglePassword.style.zIndex = '20';
+        
+        passwordField.parentElement.style.position = 'relative';
+        passwordField.parentElement.appendChild(togglePassword);
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.className = type === 'password' ? 'fas fa-eye input-icon' : 'fas fa-eye-slash input-icon';
+        });
+    </script>
+</body>
+</html> 

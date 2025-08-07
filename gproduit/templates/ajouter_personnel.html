@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if employe %}Modifier{% else %}Ajouter{% endif %} un Employé</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-icon">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M507.606 371.054a187.217 187.217 0 00-23.051-19.606c-17.316 19.999-37.648 36.808-60.572 50.041-35.508 20.505-75.893 31.452-116.875 31.711 21.762 8.776 45.224 13.38 69.396 13.38 49.524 0 96.084-19.286 131.103-54.305a15 15 0 004.394-10.606 15.028 15.028 0 00-4.395-10.615zM27.445 351.448a187.392 187.392 0 00-23.051 19.606C1.581 373.868 0 377.691 0 381.669s1.581 7.793 4.394 10.606c35.019 35.019 81.579 54.305 131.103 54.305 24.172 0 47.634-4.604 69.396-13.38-40.985-.259-81.367-11.206-116.879-31.713-22.922-13.231-43.254-30.04-60.569-50.039z"/>
+                    </svg>
+                </div>
+            </div>
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="{% url 'acceuil' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'personnel' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Personnel</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="app-content">
+            <div class="app-content-header">
+                <h1 class="app-content-headerText">
+                    {% if employe %}Modifier{% else %}Ajouter{% endif %} un Employé
+                </h1>
+                <button class="app-content-headerButton">
+                    <a href="{% url 'personnel' %}" class="lien">Retour à la liste</a>
+                </button>
+            </div>
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h3><i class="fas fa-user-plus"></i> 
+                        {% if employe %}Modifier l'employé{% else %}Nouvel employé{% endif %}
+                    </h3>
+                    <p>Remplissez tous les champs obligatoires pour {% if employe %}modifier{% else %}ajouter{% endif %} un employé</p>
+                </div>
+
+                {% if messages %}
+                <div class="info-card">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" id="employeForm">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Informations personnelles -->
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-user"></i> Informations personnelles</h5>
+                            
+                            <div class="form-group">
+                                <label for="nom">Nom *</label>
+                                <input type="text" class="form-control" id="nom" name="nom" 
+                                       value="{% if employe %}{{ employe.nom }}{% endif %}" required>
+                                {% if form.nom.errors %}
+                                <div class="error-message">{{ form.nom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="prenom">Prénom *</label>
+                                <input type="text" class="form-control" id="prenom" name="prenom" 
+                                       value="{% if employe %}{{ employe.prenom }}{% endif %}" required>
+                                {% if form.prenom.errors %}
+                                <div class="error-message">{{ form.prenom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date_naiss">Date de naissance *</label>
+                                <input type="date" class="form-control" id="date_naiss" name="date_naiss" 
+                                       value="{% if employe %}{{ employe.date_naiss|date:'Y-m-d' }}{% endif %}" required>
+                                {% if form.date_naiss.errors %}
+                                <div class="error-message">{{ form.date_naiss.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contacts">Contact *</label>
+                                <input type="tel" class="form-control" id="contacts" name="contacts" 
+                                       value="{% if employe %}{{ employe.contacts }}{% endif %}" required>
+                                {% if form.contacts.errors %}
+                                <div class="error-message">{{ form.contacts.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Informations professionnelles -->
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-briefcase"></i> Informations professionnelles</h5>
+                            
+                            <div class="form-group">
+                                <label for="date_embau">Date d'embauche *</label>
+                                <input type="date" class="form-control" id="date_embau" name="date_embau" 
+                                       value="{% if employe %}{{ employe.date_embau|date:'Y-m-d' }}{% endif %}" required>
+                                {% if form.date_embau.errors %}
+                                <div class="error-message">{{ form.date_embau.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fonction">Fonction *</label>
+                                <select class="form-control" id="fonction" name="fonction" required>
+                                    <option value="">Sélectionner une fonction</option>
+                                    <option value="Manager" {% if employe and employe.fonction == 'Manager' %}selected{% endif %}>Manager</option>
+                                    <option value="Vendeur" {% if employe and employe.fonction == 'Vendeur' %}selected{% endif %}>Vendeur</option>
+                                    <option value="Comptable" {% if employe and employe.fonction == 'Comptable' %}selected{% endif %}>Comptable</option>
+                                    <option value="Secrétaire" {% if employe and employe.fonction == 'Secrétaire' %}selected{% endif %}>Secrétaire</option>
+                                    <option value="Caissier" {% if employe and employe.fonction == 'Caissier' %}selected{% endif %}>Caissier</option>
+                                    <option value="Magasinier" {% if employe and employe.fonction == 'Magasinier' %}selected{% endif %}>Magasinier</option>
+                                </select>
+                                {% if form.fonction.errors %}
+                                <div class="error-message">{{ form.fonction.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="renumere_par">Type de rémunération *</label>
+                                <select class="form-control" id="renumere_par" name="renumere_par" required>
+                                    <option value="">Sélectionner le type</option>
+                                    <option value="mois" {% if employe and employe.renumere_par == 'mois' %}selected{% endif %}>Par mois</option>
+                                    <option value="jour" {% if employe and employe.renumere_par == 'jour' %}selected{% endif %}>Par jour</option>
+                                    <option value="semaine" {% if employe and employe.renumere_par == 'semaine' %}selected{% endif %}>Par semaine</option>
+                                </select>
+                                {% if form.renumere_par.errors %}
+                                <div class="error-message">{{ form.renumere_par.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="salaire">Salaire (FCFA) *</label>
+                                <input type="number" class="form-control" id="salaire" name="salaire" 
+                                       value="{% if employe %}{{ employe.salaire }}{% endif %}" step="0.01" required>
+                                {% if form.salaire.errors %}
+                                <div class="error-message">{{ form.salaire.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Informations de travail -->
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-calendar-alt"></i> Informations de travail</h5>
+                            
+                            <div class="form-group">
+                                <label for="jour_travailler">Jours travaillés *</label>
+                                <input type="number" class="form-control" id="jour_travailler" name="jour_travailler" 
+                                       value="{% if employe %}{{ employe.jour_travailler }}{% else %}0{% endif %}" min="0" required>
+                                {% if form.jour_travailler.errors %}
+                                <div class="error-message">{{ form.jour_travailler.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="jour_absen">Jours d'absence *</label>
+                                <input type="number" class="form-control" id="jour_absen" name="jour_absen" 
+                                       value="{% if employe %}{{ employe.jour_absen }}{% else %}0{% endif %}" min="0" required>
+                                {% if form.jour_absen.errors %}
+                                <div class="error-message">{{ form.jour_absen.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Observations -->
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-comment"></i> Observations</h5>
+                            
+                            <div class="form-group">
+                                <label for="observation">Observations</label>
+                                <textarea class="form-control" id="observation" name="observation" rows="4" 
+                                          placeholder="Ajoutez des observations sur l'employé...">{% if employe %}{{ employe.observation }}{% endif %}</textarea>
+                                {% if form.observation.errors %}
+                                <div class="error-message">{{ form.observation.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calcul automatique du salaire net -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-card">
+                                <h6><i class="fas fa-calculator"></i> Calcul automatique</h6>
+                                <p>Salaire net calculé: <strong id="salaireNet">0 FCFA</strong></p>
+                                <small>Le salaire net est calculé automatiquement en fonction des jours travaillés</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-submit">
+                                <i class="fas fa-save"></i> 
+                                {% if employe %}Modifier{% else %}Ajouter{% endif %} l'employé
+                            </button>
+                            <a href="{% url 'personnel' %}" class="btn btn-cancel">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script>
+        // Calcul automatique du salaire net
+        function calculerSalaireNet() {
+            const salaire = parseFloat(document.getElementById('salaire').value) || 0;
+            const joursTravailles = parseInt(document.getElementById('jour_travailler').value) || 0;
+            const typeRenumeration = document.getElementById('renumere_par').value;
+            
+            let salaireNet = 0;
+            
+            if (typeRenumeration === 'jour') {
+                salaireNet = salaire * joursTravailles;
+            } else if (typeRenumeration === 'semaine') {
+                salaireNet = salaire * (joursTravailles / 5); // 5 jours par semaine
+            } else if (typeRenumeration === 'mois') {
+                salaireNet = salaire * (joursTravailles / 22); // 22 jours par mois en moyenne
+            }
+            
+            document.getElementById('salaireNet').textContent = salaireNet.toFixed(0) + ' FCFA';
+        }
+
+        // Écouter les changements pour recalculer
+        document.getElementById('salaire').addEventListener('input', calculerSalaireNet);
+        document.getElementById('jour_travailler').addEventListener('input', calculerSalaireNet);
+        document.getElementById('renumere_par').addEventListener('change', calculerSalaireNet);
+
+        // Calculer au chargement de la page
+        document.addEventListener('DOMContentLoaded', calculerSalaireNet);
+
+        // Validation du formulaire
+        document.getElementById('employeForm').addEventListener('submit', function(e) {
+            const nom = document.getElementById('nom').value.trim();
+            const prenom = document.getElementById('prenom').value.trim();
+            const dateNaiss = document.getElementById('date_naiss').value;
+            const contacts = document.getElementById('contacts').value.trim();
+            const dateEmbau = document.getElementById('date_embau').value;
+            const fonction = document.getElementById('fonction').value;
+            const renumerePar = document.getElementById('renumere_par').value;
+            const salaire = document.getElementById('salaire').value;
+
+            if (!nom || !prenom || !dateNaiss || !contacts || !dateEmbau || !fonction || !renumerePar || !salaire) {
+                e.preventDefault();
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return false;
+            }
+
+            // Validation de la date de naissance
+            const dateNaissObj = new Date(dateNaiss);
+            const aujourdhui = new Date();
+            const age = aujourdhui.getFullYear() - dateNaissObj.getFullYear();
+            
+            if (age < 16 || age > 65) {
+                e.preventDefault();
+                alert('L\'âge de l\'employé doit être entre 16 et 65 ans.');
+                return false;
+            }
+
+            // Validation de la date d'embauche
+            const dateEmbauObj = new Date(dateEmbau);
+            if (dateEmbauObj > aujourdhui) {
+                e.preventDefault();
+                alert('La date d\'embauche ne peut pas être dans le futur.');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html> 

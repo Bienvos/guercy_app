@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  {% load static%}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facture</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .invoice-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .logo {
+      height: 80px;
+    }
+    .total {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-5">
+  <div class="invoice-box">
+    <div class="row mb-4">
+      <div class="col-6">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo_TV_2015.png" alt="Logo Entreprise" class="logo">
+        <p class="mt-2">
+          <strong>Nom de l'entreprise :</strong> TechNova Solutions<br>
+          <strong>N° d’entreprise :</strong> 0123456789<br>
+          <strong>Adresse :</strong> 123 Rue des Développeurs, Brazzaville, Congo<br>
+          <strong>Email :</strong> contact@technova.cg
+        </p>
+      </div>
+      <div class="col-6 text-end">
+        <h1>Facture</h1>
+        <p><strong>Date :</strong> {{obj.date_achat}} </p>
+        <p><strong>Client :</strong> {{obj.client.nom}} </p>
+        <p><strong>Facture N° :</strong> FAC-{{obj.id}}</p>
+        
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead class="table-secondary">
+        <tr>
+          <th>Produit</th>
+          <th>Quantité</th>
+          <th>Prix unitaire</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="invoice-body">
+        {% for i in produits  %}
+
+        <tr>
+          <td> <center>{{i.produit.nom}}</center> </td>
+          <td> <center>{{i.quantite}}</center> </td>
+          <td> <center>{{i.prix_unitaire}} <span>FCFA</span> </center> </td>
+          <td class="line-total"> <center>{{i.totalp}} <span>FCFA</span> </center> </td>
+        </tr>
+        
+
+
+        {% endfor %}
+        
+      
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-end">Total à payer :</td>
+          <td class="total" id="total-amount"> <center>{{obj.total_vente}} <span> FCFA</span></center>  </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p class="mt-4 text-center">Merci pour votre confiance !</p>
+  </div>
+</div>
+
+<script>
+  function updateTotals() {
+    const rows = document.querySelectorAll("#invoice-body tr");
+    let grandTotal = 0;
+    rows.forEach(row => {
+      const quantity = row.querySelector(".quantity").value;
+      const price = row.querySelector(".price").value;
+      const lineTotal = quantity * price;
+      row.querySelector(".line-total").textContent = lineTotal.toLocaleString('fr-FR');
+      grandTotal += lineTotal;
+    });
+    document.getElementById("total-amount").textContent = grandTotal.toLocaleString('fr-FR');
+  }
+
+  document.querySelectorAll(".quantity, .price").forEach(input => {
+    input.addEventListener("input", updateTotals);
+  });
+
+  document.getElementById("invoice-date").textContent = new Date().toLocaleDateString('fr-FR');
+
+  updateTotals(); // initial call
+</script>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+
+
+</body>
+</html>

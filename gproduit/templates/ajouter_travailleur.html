@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Travailleur</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background-color: #6f42c1;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center text-primary mb-4">Ajouter un Travailleur</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Nom</label>
+                {{ form.nom }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Prénom</label>
+                {{ form.prenom }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Date de naissance</label>
+                {{ form.date_naissance }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Contact</label>
+                {{ form.contact }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Date d'embauche</label>
+                {{ form.date_embauche }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Fonction</label>
+                {{ form.fonction }}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Salaire</label>
+                {{ form.salaire }}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Type de rémunération</label>
+                {{ form.renumeration_type }}
+            </div>
+            <div class="col-md-2 mb-3">
+                <label>Jours Travaillés</label>
+                {{ form.jours_travailles }}
+            </div>
+            <div class="col-md-2 mb-3">
+                <label>Jours Absence</label>
+                {{ form.jours_absence }}
+            </div>
+            <div class="col-md-12 mb-3">
+                <label>Observation</label>
+                {{ form.observation }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </form>
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+</body>
+</html>

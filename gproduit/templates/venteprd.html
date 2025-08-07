@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    {%load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        
+            <div class="row py-3">
+                <h3 class="text text-primary text-center">Vente</h3>
+    
+            </div>
+    
+           <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-11">
+                    <label for="client" name="client" class="text text-center mb-3"> <a data-bs-target="#client" data-bs-toggle="modal"  href="#"> <i class=" fa fa-plus mx-2"></i></a>  Client</label>
+                    {{form.client}}
+                </div>
+            </div>
+    
+            <div id="wrapper">
+                <div class="row mt-5">
+                    <div class="col-md-3 bnt_1">
+                        <label for="id_produit">#1 Produit</label>
+                        <select class="form-control produit-select" id="id_produit_1" name="produit"> 
+                            <option value="">chossissez un produit</option>
+                            {% for p in produits %}
+                                <option value="{{p.id}}">{{p.nom}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+        
+                    <div class="col-md-2">
+                        <label for="prix-1">Prix Unitaire</label>
+                        <input type="number" class="form-control prix-unitaire" id="prix-unitaire_1" name="prix" readonly>
+                    </div>
+        
+                    <div class="col-md-2 mx-auto">
+                        <label for="quantite-1">Quantite</label>
+                        <input type="number" min="0" class="form-control quantite" name="quantite" id="quantite-1"  >
+                    </div>
+        
+                    <div class="col-md-3 mx-auto" >
+                        <label for="total-1">Total</label>
+                        <input type="text" class="form-control total" id="total_1" name="totalp"  readonly >
+                    </div>
+                </div>
+            </div> 
+
+            <div class="row py-2">
+                <label for="">Total vente</label>
+                <input type="text" class="form-control bg-dark text-warning"  name="totalvente" id="total_vente" value="0.00 " readonly>
+
+            </div>
+
+            <button type="submit" name="form" class="btn btn-primary mt-4">Enregister la Vente</button>
+            <br><br><br>
+
+           </form>
+            
+        
+
+            
+        
+            
+
+            <div class="row">
+                <button id="delp" class="btn btn-outline-danger w-50 col-md-6">Supprimer Produit</button>
+                <button id="addp" class="btn btn-outline-success w-50 col-md-4">Ajouter Produit</button>
+            </div>
+    </div>
+
+    <!-- modal client -->
+    <div class="modal fade" id="client" tabindex="-1" role="dialog" aria-labelledby="sexampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="sexampleModalLabel">Ajouter un Client</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                {% csrf_token %}
+                <label for="nom_fournisseur"> Nom:</label>
+                {{form1.nom}}
+                <label for="prenom"> Téléphone:</label>
+                {{form1.Tel}}
+                <!-- <label for="contact"> Contact:</label> -->
+                <!-- {{form2.contact}} -->
+                <!-- <label for="email"> email:</label> -->
+                <!-- {{form2.email}} -->
+                <!-- <label for="Adresse"> Adresse:</label> -->
+                <!-- {{form2.Adresse}} -->
+                <!-- <label for="mode_payement"> Mode de Payement:</label> -->
+                <!-- {{form2.mode_payement}} -->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annulez</button>
+                    <button type="submit" name="form1" class="btn btn-success">Ajouter</button>
+                </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <!-- end modal -->
+    
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+
+    <script type="text/javascript">
+
+    var num = $('#wrapper').children().length +1;
+    $(document).on('click','#addp', function(){
+        var number = $('#wrapper').children().length +1;
+
+        // ajouter une ligne de produit 
+
+        let prodadd =  `<div class="row py-2">
+                <div class="col-md-3 bnt_${number}">
+                    <label for="id_produit_${number}">#${number} Produit</label>
+                    <select class="form-control produit-select" id="id_produit_${number}" name="produit">
+                        <option value="" class ='text text-secondary'>Choississez un produit</option>
+                        {% for p in produits %}
+                            <option value="{{p.id}}">{{p.nom}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <div class="col-md-2">
+                    <label for="prix-${number}">Prix Unitaire</label>
+                    <input type="number" class="form-control prix-unitaire" id="prix-unitaire_${number}" name="prix" readonly>
+                </div>
+    
+                <div class="col-md-2 mx-auto">
+                    <label for="quantite-${number}">Quantite</label>
+                    <input type="number" min="0" class="form-control quantite" id="quantite-${number}" name="quantite" >
+                </div>
+    
+                <div class="col-md-3 mx-auto" >
+                    <label for="total-${number}">Total</label>
+                    <input type="text" class="form-control total" id="total_${number}" name="totalp" readonly >
+                </div>
+        </div>
+          
+        `;
+        $('#wrapper:last').append(prodadd);
+
+    })
+
+    // supprimer une ligne de produit
+
+
+    $(document).on('click','#delp',function(){
+
+        $('#wrapper').children().last().remove();
+        calculerTotalVente(); // recalcul le total vente apres suppression d'un produit
+    })
+
+    // chargement du prix unitaire lorsqu'on selectionne le produit//
+
+    
+    // const prixProduits = {
+    //         {% for p in produits %}
+    //         "{{p.id}}":"{{p.prix}}",
+    //         {% endfor %}
+    //     };
+
+    //const selectProduit = document.getElementById('id_produit'); // recuperation de l'id de elements selectionné 
+    //const prixUnitaire = document.getElementById('prix-unitaire'); // recuperation du champ prix unitaire apartir de son id
+
+    //const prixProduits = {
+
+        //{% for p in produits  %}
+        //"{{p.id}}":"{{p.prix}}",  
+        
+        //{% endfor %}
+        
+    //}; // dictionnaire contenant les id et prix de tout les produit contenu dans la table produit
+
+    //selectProduit.addEventListener('change', function(){ //ajout d'evenement change sur id du produit selectionner
+        //const produitId =this.value; // recuperation de l'id du produit selectionnez
+        //const prix = prixProduits[produitId];//recuperation de prix du produit selectionnez au niveau du dictionnaire id_prix
+        //prixUnitaire.value = prix; // ajout du prix obtenu au niveau du champ prix unitaire
+    //} );
+
+
+
+    // *** mise a jour du prix unitaire lorsque l'on selectionne un produit ***
+
+    $(document).on('change','.produit-select', function(){
+        let id = $(this).attr('id').split('_')[2]; // pour, la selection en cours $(this), on recupere l'attribut id,attr('id') et on le divise en tableau avec split('_') pour recuperer le numero de la ligne de produit selectionner avec l'index 2
+        let produitId = $(this).val(); // pour recuperer la valeur de l'option value ou l'id du produit selectionner 
+
+        const prixProduits = {
+            {% for p in produits %}
+            "{{p.id}}":"{{p.prix}}",
+            {% endfor %}
+        }; // dictionnaire contenant les id et prix de tout les produit contenu dans la table produit
+
+        let prix = prixProduits[produitId].replace(',', '.'); // recuperation du prix produit pour correspandant a l'id du produit (produitId)
+        
+        $(`#prix-unitaire_${id}`).val(prix); // mise a jour du champ prix unitaire
+
+
+        modtotal(id) ; // appel de la fonction modtotal pour mettre a jour le total de la ligne de produit selectionner
+
+        
+
+    });
+
+
+    
+                 
+        $(document).on('input','.quantite', function(){ // evenement input sur le champ quantite
+            let id = $(this).attr('id').split('-')[1]; // recuperation de l'id de la ligne de produit selectionner
+            modtotal(id); // appel de la fonction modtotal pour mettre a jour le total de la ligne de produit selectionner
+        });
+        
+    
+
+
+
+    
+
+
+    
+
+    // fonction pour mettre a jour le total de la ligne de produit selectionner
+     function modtotal(id){
+        
+
+        let prix = parseFloat($(`#prix-unitaire_${id}`).val()); // recuperation du prix unitaire de la ligne de produit selectionner et conversion en nombre flottant
+        let quantite = parseFloat($(`#quantite-${id}`).val());// recuperation de la quantite de la ligne de produit selectionner et conversion en nombre flottant
+        let total = prix * quantite;
+        if(isNaN(total)){ // si le total est NaN (not a number) on le met a 0
+            total = 0;
+            $(`#total_${id}`).val(total.toFixed(2) );
+        }
+
+        $(`#total_${id}`).val(total.toFixed(2)); // mise a jour du champ total de la ligne de produit selectionner 
+        calculerTotalVente(); // appel de la fonction pour calculer le total de la vente
+    }
+
+
+
+    // fonction pour calculer le total de la vente
+    function calculerTotalVente() {
+        let totalVente = 0;
+        document.querySelectorAll('.total').forEach(input => { // selection de tous les champs ayant la classe total, avec foreach( input =>{}) on parcourt chaque champ .total un par un
+            let val = parseFloat(input.value); // conversion de la valeur de total en nombre flottant
+            totalVente += val; // addition de la valeur de total au total de la vente
+        });
+        document.getElementById('total_vente').value = totalVente.toFixed(2) ; // mise a jour du champ total de la vente avec le total calculer
+    }
+
+
+    
+
+
+    
+
+
+
+
+
+    
+
+
+
+
+ 
+    
+
+        
+
+    
+
+
+
+
+    </script>
+    
+
+
+    
+</body>
+</html>
+

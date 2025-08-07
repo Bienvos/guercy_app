@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Travailleurs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/all.min.css">
+    <style>
+        body {
+            background-color: #6f42c1;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: white;
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .title {
+            color: #6f42c1;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+        }
+        th {
+            background-color: #6f42c1;
+            color: white;
+        }
+        td, th {
+            vertical-align: middle !important;
+            text-align: center;
+        }
+        .btn-action {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="title text-center">Liste des Travailleurs</h3>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Fonction</th>
+                <th>Contact</th>
+                <th>Date d'embauche</th>
+                <th>Type de Rémunération</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Exemple de ligne -->
+            <tr>
+                <td>Ndongo</td>
+                <td>Bienvenu</td>
+                <td>Administrateur Systèmes</td>
+                <td>06 123 456 78</td>
+                <td>2023-03-15</td>
+                <td>Par mois</td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-primary btn-action">Voir</a>
+                    <a href="#" class="btn btn-sm btn-warning btn-action">Modifier</a>
+                    <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Travailleurs - Gestion du Personnel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            margin: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-section {
+           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(129, 75, 254, 0.3);
+        }
+        
+        .header-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-section p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
+        }
+        
+        .stat-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .action-buttons {
+            margin-bottom: 40px;
+            text-align: right;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-add::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-add:hover::before {
+            left: 100%;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .table tbody tr:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.1);
+        }
+        
+        .table tbody td {
+            padding: 20px 15px;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        .badge {
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: white;
+        }
+        
+        .badge-info {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+            color: white;
+        }
+        
+        .btn-action {
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: none;
+            margin: 3px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-view {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            color: white;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-control {
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            padding: 15px 25px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6B7280;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h5 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .header-section h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1><i class="fas fa-users"></i> Gestion du Personnel</h1>
+                <p>Liste complète des travailleurs de l'entreprise</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>{{ total_travailleurs|default:"0" }}</h3>
+                    <p>Total Travailleurs</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>{{ total_jours_travailles|default:"0" }}</h3>
+                    <p>Jours Travaillés</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>{{ total_jours_absents|default:"0" }}</h3>
+                    <p>Jours Absents</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>{{ total_salaire|floatformat:0|default:"0" }}</h3>
+                    <p>Total Salaires (FCFA)</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'ajoutravailleur' %}" class="btn-add">
+                    <i class="fas fa-plus"></i>
+                    Ajouter un Travailleur
+                </a>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un travailleur...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-control" id="filterFunction">
+                            <option value="">Toutes les fonctions</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Employé">Employé</option>
+                            <option value="Stagiaire">Stagiaire</option>
+                            <option value="Directeur">Directeur</option>
+                            <option value="Secrétaire">Secrétaire</option>
+                            <option value="Comptable">Comptable</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="travailleursTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Travailleur</th>
+                                <th><i class="fas fa-briefcase"></i> Fonction</th>
+                                <th><i class="fas fa-phone"></i> Contact</th>
+                                <th><i class="fas fa-calendar-alt"></i> Date Embauche</th>
+                                <th><i class="fas fa-clock"></i> Jours Travaillés</th>
+                                <th><i class="fas fa-calendar-times"></i> Jours Absents</th>
+                                <th><i class="fas fa-money-bill-wave"></i> Salaire</th>
+                                <th><i class="fas fa-calendar-check"></i> Type Rémunération</th>
+                                <th><i class="fas fa-sticky-note"></i> Observations</th>
+                                <th><i class="fas fa-cogs"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for travailleur in travailleurs %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="avatar me-3">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="text-start">
+                                            <strong>{{ travailleur.nom }} {{ travailleur.prenom }}</strong><br>
+                                            <small class="text-muted">{{ travailleur.date_naiss|date:"d/m/Y" }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">{{ travailleur.fonction }}</span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone me-2"></i>{{ travailleur.contacts }}
+                                </td>
+                                <td>
+                                    <i class="fas fa-calendar me-2"></i>{{ travailleur.date_embau|date:"d/m/Y" }}
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">{{ travailleur.jour_travailler }} jours</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">{{ travailleur.jour_absen }} jours</span>
+                                </td>
+                                <td>
+                                    <strong>{{ travailleur.salaire|floatformat:0 }} FCFA</strong><br>
+                                    <small class="text-muted">Net: {{ travailleur.net|floatformat:0 }} FCFA</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-secondary">{{ travailleur.renumere_par }}</span>
+                                </td>
+                                <td>
+                                    {% if travailleur.observation %}
+                                        <span class="text-muted" title="{{ travailleur.observation }}">
+                                            <i class="fas fa-sticky-note"></i> {{ travailleur.observation|truncatechars:30 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">Aucune observation</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn-action btn-view" title="Voir détails" onclick="voirDetails({{ travailleur.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-action btn-edit" title="Modifier" onclick="modifierTravailleur({{ travailleur.id }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action btn-delete" title="Supprimer" onclick="supprimerTravailleur({{ travailleur.id }})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="10" class="empty-state">
+                                    <i class="fas fa-users"></i>
+                                    <h5>Aucun travailleur trouvé</h5>
+                                    <p>Commencez par ajouter votre premier travailleur</p>
+                                    <a href="#" class="btn-add">
+                                        <i class="fas fa-plus"></i> Ajouter un Travailleur
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const table = document.getElementById('travailleursTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        // Filter by function
+        document.getElementById('filterFunction').addEventListener('change', function() {
+            const filterValue = this.value.toLowerCase();
+            const table = document.getElementById('travailleursTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const functionCell = row.cells[1];
+                if (functionCell) {
+                    const functionText = functionCell.textContent.toLowerCase();
+                    if (filterValue === '' || functionText.includes(filterValue)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+        });
+
+        // Action functions
+        function voirDetails(id) {
+            // Implement view details functionality
+            alert('Voir les détails du travailleur ID: ' + id);
+        }
+
+        function modifierTravailleur(id) {
+            // Implement edit functionality
+            window.location.href = `/modifier-travailleur/${id}/`;
+        }
+
+        function supprimerTravailleur(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce travailleur ?')) {
+                // Implement delete functionality
+                alert('Supprimer le travailleur ID: ' + id);
+            }
+        }
+
+        // Add animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

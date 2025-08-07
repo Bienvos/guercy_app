@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Personnel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        .personnel-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: white;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: none;
+            margin: 2px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view { background: #007bff; color: white; }
+        .btn-edit { background: #ffc107; color: #212529; }
+        .btn-delete { background: #dc3545; color: white; }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-active { background: #28a745; color: white; }
+        .status-inactive { background: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-icon">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M507.606 371.054a187.217 187.217 0 00-23.051-19.606c-17.316 19.999-37.648 36.808-60.572 50.041-35.508 20.505-75.893 31.452-116.875 31.711 21.762 8.776 45.224 13.38 69.396 13.38 49.524 0 96.084-19.286 131.103-54.305a15 15 0 004.394-10.606 15.028 15.028 0 00-4.395-10.615zM27.445 351.448a187.392 187.392 0 00-23.051 19.606C1.581 373.868 0 377.691 0 381.669s1.581 7.793 4.394 10.606c35.019 35.019 81.579 54.305 131.103 54.305 24.172 0 47.634-4.604 69.396-13.38-40.985-.259-81.367-11.206-116.879-31.713-22.922-13.231-43.254-30.04-60.569-50.039z"/>
+                    </svg>
+                </div>
+            </div>
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        <span>Produits</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item active">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Personnel</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'listevente' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                            <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                        </svg>
+                        <span>Ventes</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="app-content">
+            <div class="app-content-header">
+                <h1 class="app-content-headerText">Gestion du Personnel</h1>
+                <button class="app-content-headerButton">
+                    <a href="{% url 'ajouter_personnel' %}" class="lien">Ajouter un employé</a>
+                </button>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ total_personnel }}</h4>
+                        <p>Total Employés</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ personnel_actif }}</h4>
+                        <p>Employés Actifs</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ total_salaire|floatformat:0 }}</h4>
+                        <p>Total Salaires (FCFA)</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h4>{{ moyenne_absences|floatformat:1 }}</h4>
+                        <p>Moyenne Absences</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un employé...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="filterFonction">
+                            <option value="">Toutes les fonctions</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Vendeur">Vendeur</option>
+                            <option value="Comptable">Comptable</option>
+                            <option value="Secrétaire">Secrétaire</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="filterRenumeration">
+                            <option value="">Tous les types</option>
+                            <option value="mois">Par mois</option>
+                            <option value="jour">Par jour</option>
+                            <option value="semaine">Par semaine</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personnel Table -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom & Prénom</th>
+                                <th>Fonction</th>
+                                <th>Date Embauche</th>
+                                <th>Jours Travaillés</th>
+                                <th>Jours Absents</th>
+                                <th>Salaire</th>
+                                <th>Type Rémunération</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employe in personnel %}
+                            <tr>
+                                <td>
+                                    <div class="avatar">
+                                        <i class="fas fa-user-circle fa-2x text-primary"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>{{ employe.nom }} {{ employe.prenom }}</strong><br>
+                                    <small class="text-muted">{{ employe.date_naiss|date:"d/m/Y" }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">{{ employe.fonction }}</span>
+                                </td>
+                                <td>{{ employe.date_embau|date:"d/m/Y" }}</td>
+                                <td>
+                                    <span class="badge badge-success">{{ employe.jour_travailler }} jours</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">{{ employe.jour_absen }} jours</span>
+                                </td>
+                                <td>
+                                    <strong>{{ employe.salaire|floatformat:0 }} FCFA</strong><br>
+                                    <small class="text-muted">Net: {{ employe.net|floatformat:0 }} FCFA</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-secondary">{{ employe.renumere_par }}</span>
+                                </td>
+                                <td>
+                                    <button class="action-btn btn-view" onclick="voirEmploye({{ employe.id }})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" onclick="modifierEmploye({{ employe.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="supprimerEmploye({{ employe.id }}, '{{ employe.nom }} {{ employe.prenom }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> Aucun employé trouvé
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour voir les détails d'un employé -->
+    <div class="modal fade" id="modalEmploye" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails de l'employé</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalEmployeBody">
+                    <!-- Contenu dynamique -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="modalSuppression" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer l'employé <strong id="nomEmploye"></strong> ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <form method="post" id="formSuppression">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="supprimer">
+                        <input type="hidden" name="employe_id" id="employeId">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script>
+        // Fonction de recherche
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Fonction pour voir les détails d'un employé
+        function voirEmploye(id) {
+            // Ici vous pouvez ajouter une requête AJAX pour récupérer les détails
+            $('#modalEmploye').modal('show');
+        }
+
+        // Fonction pour modifier un employé
+        function modifierEmploye(id) {
+            window.location.href = `/personnel/modifier/${id}/`;
+        }
+
+        // Fonction pour supprimer un employé
+        function supprimerEmploye(id, nom) {
+            document.getElementById('nomEmploye').textContent = nom;
+            document.getElementById('employeId').value = id;
+            $('#modalSuppression').modal('show');
+        }
+
+        // Filtres
+        document.getElementById('filterFonction').addEventListener('change', function() {
+            const fonction = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const fonctionCell = row.querySelector('td:nth-child(3)');
+                if (fonction === '' || fonctionCell.textContent.includes(fonction)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('filterRenumeration').addEventListener('change', function() {
+            const renumeration = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const renumerationCell = row.querySelector('td:nth-child(8)');
+                if (renumeration === '' || renumerationCell.textContent.includes(renumeration)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

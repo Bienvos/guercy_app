@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Travailleur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/all.min.css">
+    <style>
+        body {
+            background-color: #6f42c1;
+        }
+        .container {
+            background-color: white;
+            margin-top: 50px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #6f42c1;
+        }
+        .form-title {
+            color: #6f42c1;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="form-title text-center">Ajouter un Travailleur</h3>
+    <form method="post" action="#">
+        <div class="row mb-3">
+            <div class="col">
+                <label for="nom">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <div class="col">
+                <label for="prenom">Prénom</label>
+                <input type="text" class="form-control" id="prenom" name="prenom" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="date_naissance">Date de naissance</label>
+                <input type="date" class="form-control" id="date_naissance" name="date_naissance" required>
+            </div>
+            <div class="col">
+                <label for="contact">Contact</label>
+                <input type="text" class="form-control" id="contact" name="contact" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="date_embauche">Date d'embauche</label>
+                <input type="date" class="form-control" id="date_embauche" name="date_embauche" required>
+            </div>
+            <div class="col">
+                <label for="fonction">Fonction</label>
+                <input type="text" class="form-control" id="fonction" name="fonction" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="jours_travailles">Jours travaillés</label>
+                <input type="number" class="form-control" id="jours_travailles" name="jours_travailles" required>
+            </div>
+            <div class="col">
+                <label for="jours_absents">Jours absents</label>
+                <input type="number" class="form-control" id="jours_absents" name="jours_absents" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="observation">Observation</label>
+            <textarea class="form-control" id="observation" name="observation" rows="3"></textarea>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="salaire">Salaire</label>
+                <input type="number" step="0.01" class="form-control" id="salaire" name="salaire" required>
+            </div>
+            <div class="col">
+                <label for="type_remuneration">Type de rémunération</label>
+                <select class="form-control" id="type_remuneration" name="type_remuneration" required>
+                    <option value="jour">Par jour</option>
+                    <option value="semaine">Par semaine</option>
+                    <option value="mois">Par mois</option>
+                </select>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </form>
+</div>
+
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Ventes</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Violet Bootstrap */
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            vertical-align: middle !important;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            
+            margin-bottom: 20px;
+        }
+
+         .dec {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center text-primary mb-4">Liste des Ventes</h3>
+
+    <div class="top-bar">
+        
+        <div>
+            
+            <a href="{% url 'ventepr' %}" class='btn btn-primary'>Ajouter vente</a>
+        </div>
+    </div>
+
+    <div class="dec">
+        
+        <div>
+            
+            <a href="{% url 'acceuil'  %}" class='btn btn-info text-white'>Accueil</a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vente in vts %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ vente.client }}</td>
+                <td>{{ vente.date }}</td>
+                <td>{{ vente.total_vente }} FCFA</td>
+                <td>
+                    <a href=" {% url 'vuefacture'  pk=vente.pk %} " class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                    <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                    <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cette vente ?');"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">Aucune vente enregistrée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        
+    </table>
+
+
+
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+</body>
+</html>

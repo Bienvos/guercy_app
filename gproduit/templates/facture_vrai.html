@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+{% load static%}
+<head>
+    <meta charset="UTF-8">
+    <title>Facture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .facture-header {
+            background-color: #0b1e3f;
+            color: white;
+            padding: 20px;
+        }
+        .facture-footer {
+            background-color: #0b1e3f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .table thead {
+            background-color: #0b1e3f;
+            color: white;
+        }
+        .btn-imprimer {
+            background-color: #0b1e3f;
+            color: white;
+            border: none;
+        }
+        .logo {
+            max-height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <div class="facture-header text-center">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-start">
+                    <img src="https://via.placeholder.com/100x50?text=LOGO" alt="Logo" class="logo">
+                </div>
+                <div class="col-md-10 text-center">
+                    <h2>FACTURE</h2>
+                    <p>Votre entreprise | www.votresite.com</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-md-6">
+                <h6>Facturé à :</h6>
+                <p>
+                    {{obj.client.nom}}<br>
+                    client@email.com<br>
+                    Adresse complète<br>
+                    {{obj.client.Tel}}
+                </p>
+            </div>
+            <div class="col-md-6 text-end">
+                <h6>Détails de la facture :</h6>
+                <p>
+                    Numéro : FAC-{{obj.id}}<br>
+                    Date : {{obj.date_achat}}<br>
+                    
+                </p>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th> <center>Produit</center> </th>
+                    <th> <center>Quantité</center>  </th>
+                    <th><center>Prix Unitaire</center></th>
+                    <th><center>Total</center></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in produits%}
+
+                <tr>
+                    <td><center>{{i.produit.nom}} </center> </td>
+                    <td> <center>{{i.quantite}}</center> </td>
+                    <td> <center>{{i.prix_unitaire}} <span>FCFA</span> </center> </td>
+                    <td> <center>{{i.totalp}} <span>FCFA</span> </center> </td>
+                </tr>
+
+                {% endfor %}
+                
+            </tbody>
+        </table>
+
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Sous-total</strong>
+                        <span>0.00 FCFA</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>TVA (18%)</strong>
+                        <span>0.00 FCFA</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Total TTC</strong>
+                        <span><strong> {{obj.total_vente}} <span>FCFA</span></strong></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- <div class="text-center my-4">
+            <button class="btn btn-imprimer" onclick="window.print()">Imprimer la facture</button>
+        </div> -->
+
+        <div class="text-center my-4">
+            <a href="{% url 'facture_vrai'  pk=obj.pk %}" >  <button class="btn btn-imprimer" >Télécharger la facture</button></a>
+        </div>
+
+        <div class="facture-footer mt-5">
+            Merci pour votre confiance !
+        </div>
+    </div>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+</body>
+</html>

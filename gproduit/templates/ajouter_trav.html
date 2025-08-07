@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Travailleur - Gestion du Personnel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            margin: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3);
+        }
+        
+        .header-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-section p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #8B5CF6;
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-section h3 {
+            color: #8B5CF6;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .form-section h3 i {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .form-label {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 1rem;
+        }
+        
+        .form-select:focus {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 18px 45px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+            border: none;
+            color: white;
+            padding: 18px 45px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-cancel:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(107, 114, 128, 0.4);
+            color: white;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #EF4444;
+            font-weight: bold;
+        }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 15px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 30px;
+            height: 2px;
+            background: #e9ecef;
+            transform: translateY(-50%);
+        }
+        
+        .step:last-child::after {
+            display: none;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step.completed {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .input-group-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px 0 0 15px;
+            padding: 15px 20px;
+        }
+        
+        .input-group .form-control {
+            border-radius: 0 15px 15px 0;
+        }
+        
+        .form-floating {
+            position: relative;
+        }
+        
+        .form-floating .form-control {
+            height: 60px;
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+        
+        .form-floating label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            padding: 15px 20px;
+            pointer-events: none;
+            border: 1px solid transparent;
+            transform-origin: 0 0;
+            transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+            color: #6B7280;
+        }
+        
+        .form-floating .form-control:focus ~ label,
+        .form-floating .form-control:not(:placeholder-shown) ~ label {
+            opacity: .65;
+            transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .header-section h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1><i class="fas fa-user-plus"></i> Ajouter un Travailleur</h1>
+                <p>Remplissez les informations pour ajouter un nouveau membre à l'équipe</p>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="step-indicator">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" id="travailleurForm">
+                    {% csrf_token %}
+                    
+                    <!-- Informations Personnelles -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Informations Personnelles</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label required-field">{{ form.nom.label }}</label>
+                                {{ form.nom }}
+                                {% if form.nom.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.nom.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Entrez le nom de famille du travailleur</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.prenom.id_for_label }}" class="form-label required-field">{{ form.prenom.label }}</label>
+                                {{ form.prenom }}
+                                {% if form.prenom.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.prenom.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Entrez le prénom du travailleur</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.date_naiss.id_for_label }}" class="form-label required-field">{{ form.date_naiss.label }}</label>
+                                {{ form.date_naiss }}
+                                {% if form.date_naiss.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.date_naiss.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Sélectionnez la date de naissance</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.contacts.id_for_label }}" class="form-label required-field">{{ form.contacts.label }}</label>
+                                {{ form.contacts }}
+                                {% if form.contacts.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.contacts.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Entrez le numéro de téléphone</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations Professionnelles -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-briefcase"></i> Informations Professionnelles</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.fonction.id_for_label }}" class="form-label required-field">{{ form.fonction.label }}</label>
+                                {{ form.fonction }}
+                                {% if form.fonction.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.fonction.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Choisissez la fonction ou le poste du travailleur</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.date_embau.id_for_label }}" class="form-label required-field">{{ form.date_embau.label }}</label>
+                                {{ form.date_embau }}
+                                {% if form.date_embau.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.date_embau.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Sélectionnez la date d'embauche</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations de Rémunération -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-money-bill-wave"></i> Informations de Rémunération</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.salaire.id_for_label }}" class="form-label required-field">{{ form.salaire.label }}</label>
+                                <div class="input-group">
+                                    {{ form.salaire }}
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
+                                {% if form.salaire.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.salaire.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Entrez le montant du salaire</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.renumere_par.id_for_label }}" class="form-label required-field">{{ form.renumere_par.label }}</label>
+                                {{ form.renumere_par }}
+                                {% if form.renumere_par.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.renumere_par.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Choisissez la fréquence de paiement</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations de Présence -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-calendar-check"></i> Informations de Présence</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.jour_travailler.id_for_label }}" class="form-label required-field">{{ form.jour_travailler.label }}</label>
+                                {{ form.jour_travailler }}
+                                {% if form.jour_travailler.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.jour_travailler.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Nombre de jours travaillés</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.jour_absen.id_for_label }}" class="form-label required-field">{{ form.jour_absen.label }}</label>
+                                {{ form.jour_absen }}
+                                {% if form.jour_absen.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.jour_absen.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="help-text">Nombre de jours d'absence</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observations -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-sticky-note"></i> Observations</h3>
+                        <div class="form-group">
+                            <label for="{{ form.observation.id_for_label }}" class="form-label">{{ form.observation.label }}</label>
+                            {{ form.observation }}
+                            {% if form.observation.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {% for error in form.observation.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="help-text">Informations supplémentaires sur le travailleur (optionnel)</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-5">
+                        <a href="{% url 'listepersonnel' %}" class="btn-cancel">
+                            <i class="fas fa-arrow-left"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-save"></i> Enregistrer le Travailleur
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation and enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('travailleurForm');
+            const steps = document.querySelectorAll('.step');
+            let currentStep = 0;
+
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Veuillez remplir tous les champs obligatoires.');
+                }
+            });
+
+            // Real-time validation
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.hasAttribute('required') && !this.value.trim()) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid') && this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+
+            // Phone number formatting
+            const phoneInput = document.getElementById('contacts');
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 0) {
+                    if (value.length <= 3) {
+                        value = '+' + value;
+                    } else if (value.length <= 6) {
+                        value = '+' + value.slice(0, 3) + ' ' + value.slice(3);
+                    } else {
+                        value = '+' + value.slice(0, 3) + ' ' + value.slice(3, 6) + ' ' + value.slice(6, 10);
+                    }
+                }
+                e.target.value = value;
+            });
+
+            // Salary calculation preview
+            const salaireInput = document.getElementById('salaire');
+            const joursTravaillesInput = document.getElementById('jour_travailler');
+            const renumereParSelect = document.getElementById('renumere_par');
+
+            function updateSalaryPreview() {
+                const salaire = parseFloat(salaireInput.value) || 0;
+                const joursTravailles = parseInt(joursTravaillesInput.value) || 0;
+                const renumerePar = renumereParSelect.value;
+
+                if (salaire > 0 && joursTravailles > 0 && renumerePar) {
+                    let netSalary = salaire;
+                    if (renumerePar === 'jour') {
+                        netSalary = salaire * joursTravailles;
+                    } else if (renumerePar === 'semaine') {
+                        netSalary = salaire * (joursTravailles / 5);
+                    }
+                    // You can add a preview element here if needed
+                }
+            }
+
+            salaireInput.addEventListener('input', updateSalaryPreview);
+            joursTravaillesInput.addEventListener('input', updateSalaryPreview);
+            renumereParSelect.addEventListener('change', updateSalaryPreview);
+
+            // Step indicator animation
+            function updateSteps() {
+                const sections = document.querySelectorAll('.form-section');
+                const currentSection = Math.floor(currentStep / 2);
+                
+                steps.forEach((step, index) => {
+                    if (index < currentStep) {
+                        step.classList.add('completed');
+                        step.classList.remove('active');
+                    } else if (index === currentStep) {
+                        step.classList.add('active');
+                        step.classList.remove('completed');
+                    } else {
+                        step.classList.remove('active', 'completed');
+                    }
+                });
+            }
+
+            // Add animation on page load
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+
+<script  src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+</html> 
+
