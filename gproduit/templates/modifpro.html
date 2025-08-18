@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vente</title>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 30px 10px;
+        }
+        .vente-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: auto;
+        }
+        h3 {
+            font-weight: bold;
+        }
+        .btn {
+            font-weight: 600;
+        }
+
+         .icon{
+    
+            text-decoration:none;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <div class="vente-container">
+
+        <div class="row py-2">
+    <h2 class="text text-center text-primary "> Modifier Produit</h2>
+   </div>
+   
+   
+
+    <div class="row py-5">
+      <div class="col-md-12">
+         <ul class="list-group" id="produit">
+          
+         </ul> 
+  
+              
+          <form action="" method="post">
+              {% csrf_token %}
+  
+              <div class="row">
+                  <!-- <div class="col-md-12">
+                      <input type="hidden" name="element" id="commande">
+                  </div> -->
+  
+                  <div class="form-group col-md-6" >
+                      <label for="nom">Nom</label>
+                      {{form.nom}}
+                      <!-- <input type="text" name="nom" required id="nom" class="form-control" placeholder="Entrez le Libellé du Produit"> -->
+                  </div>
+                  <div class="form-group col-md-4" >
+                      <label for="Email">Prix </label>
+                      {{form.prix}}
+                      <!-- <input type="number" name="prix" required id="prix" class="form-control" placeholder="Entrez le prix unitaire"> -->
+                  </div>
+                  <div class="form-group col-md-2" >
+                      <label for="Phone">Quantite</label>
+                      {{form.quantite}}
+                      <!-- <input type="number" name="quantite" required id="quantite" class="form-control" placeholder=" Entrez la quantité"> -->
+                  </div>
+                  
+              </div>
+  
+              <div class="row">
+                  <div class="form-group col-md-6">
+                      <label for="categorie">Catégorie</label>
+                      {{form.categorie}}
+                        
+                      <!-- <select name="categorie " class="form-control" required id="categorie">
+                          <option>Chosissez une Categorie</option>
+                          <option value="">{{form.categorie}}</option>
+                           {% for n in categorie %}
+                           <option value="{{n.pk}}"> {{n.nom}} </option>
+                          {% endfor %}
+                        
+                      </select> -->
+                  </div>
+  
+                  <div class="form-group col-md-6">
+                      <label for="fournisseur">Fournisseurs</label>
+                      {{form.fournisseur}}
+                      <!-- <select name="fournisseur" class="form-control" required id="fournisseur">
+                          <option>Choissisez Fournisseurs</option>
+                          <option value="{{fournisseur.pk}}">  {{fournisseur.nom}}</option>
+                          
+                      </select> -->
+                  </div>
+  
+  
+              </div>
+  
+              <div class="row">
+                  <div class="form-group">
+                      <label for="date_livraison"> Date de Livraison</label>
+                      {{form.date_livraison}}
+                      <!-- <input type="datetime" name="date_livraison" required id="date_livraison" class="form-control" placeholder="Entrez la Date de Livraison ..."> -->
+  
+                  </div>
+              </div>
+  
+              <div class="row py-3">
+                  <div class="form-group ">
+                    {{form.description}}
+                      <!-- <label for="description">Description</label> -->
+                      <!-- <input type="text" name="description" required id="description" class="form-control" placeholder=" quartier du client"> -->
+                      <!-- <textarea name="description" cols="109" required id="description" rows="8" placeholder="Entrez une Description du Produit"></textarea>
+   -->
+                  </div>
+  
+                  
+              </div>
+  
+              <br><br>
+              <!-- <div class="form-group col-md-2" >
+                  <label for="total">Somme total a payer</label>
+                  <input type="ReadOnly" name="total"  id="total" class=" bg-dark text-warning form-control" >
+              </div> -->
+  
+              
+  
+  
+              <div class="row  ">
+  
+                  <div class="col-md-6 offset-5 "><button type="submit" name="form1" id="com" class=" form-group btn btn-primary mx-auto">Modifier </button></div>
+  
+              </div>
+          </form>
+          
+  
+      </div>
+  </div>
+
+
+        
+    </div>
+
+<script  src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+</html>

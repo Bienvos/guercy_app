@@ -1,10 +1,13 @@
 from django.urls import path
-from .views import acceuil,Ajoutpro, fourniss, partenai,ventepr,listvent,facture,generepdf, personnel,platini,ajout_per,ajout_travailleur,liste_travailleurs, getcategorie, clients_e
+from .views import ModifPro, acceuil,Ajoutpro, detailprod, fourniss, partenai,ventepr,listvent,facture,generepdf, personnel,platini,ajout_per,ajout_travailleur,liste_travailleurs, getcategorie, clients_e
 
 
 urlpatterns = [
     path('', acceuil.as_view(), name ='acceuil'),
     path('ajout/',Ajoutpro.as_view(), name ='craetep'),
+    path('modification/<int:pk>/',ModifPro.as_view(), name ='modification'), # fontionnalité a revoir
+    path('voirprod/<int:pk>/', detailprod.as_view(), name="voirprod"),
+    
     path('vente/',ventepr, name ='ventepr'),
     path('listevente/', listvent.as_view(), name='listevente'),
     path('facture/<int:pk>/',facture.as_view(), name ="vuefacture" ),
@@ -18,6 +21,7 @@ urlpatterns = [
     path('clients/', clients_e, name="clients"),
     path('fournisseurs/', fourniss, name="fournisseurs"),
     path('partenaires/', partenai, name="partenaires"),
+   
     # path('categori/',createcate.as_view() , name="catego"),
 ]
 

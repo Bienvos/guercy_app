@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
-{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion de Stock - Tableau de bord</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
     <style>
         * {
             margin: 0;
@@ -429,207 +427,12 @@ nav ul li > a {
     </div>
 
     <!-- CONTENU PRINCIPAL -->
-    <div class="container">
-        <!-- ici tu mets tout le contenu HTML existant de ton tableau de bord comme .header, .stats-grid, .products-section etc. -->
-        <!-- par exemple : -->
-        <div class="header">
-            <h1><i class="fas fa-boxes"></i> Gestion de Stock</h1>
-            <p>Tableau de bord - Suivi complet de votre inventaire</p>
-        </div>
-        <!-- et tout le reste... -->
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Produits</h3>
-                <div class="value">1,247</div>
-                <div class="change">+12% ce mois</div>
-            </div>
-            <div class="stat-card">
-                <h3>Valeur Totale</h3>
-                <div class="value">€45,230</div>
-                <div class="change">+8% ce mois</div>
-            </div>
-            <div class="stat-card">
-                <h3>Stock Faible</h3>
-                <div class="value">23</div>
-                <div class="change">-5% ce mois</div>
-            </div>
-            <div class="stat-card">
-                <h3>Stock Critique</h3>
-                <div class="value">7</div>
-                <div class="change">Attention requise</div>
-            </div>
-        </div>
-
-        <!-- Products Section -->
-        <div class="products-section">
-            <div class="section-header">
-                <h2>Liste des Produits</h2>
-                <a href="{% url 'craetep' %}" class="btn">
-                    <i class="fas fa-plus"></i>
-                    Ajouter un produit
-                </a>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <input type="text" class="search-input" name="recherche" placeholder="Rechercher un produit...">
-                <button type="submit" class="btn" >
-                    <i class="fas fa-search"></i>
-                    Rechercher
-                </button>
-            </div>
-
-            <!-- Products Table -->
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th>Produit</th>
-                        <th>Catégorie</th>
-                        <th>Prix</th>
-                        <th>Stock</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                   
-                   
-                   
-                   {% for n  in produits %}
-
-                     <tr>
-                        <td>
-                            <strong> {{n.nom}}</strong>
-                            <br><small>REF: LP-001</small>
-                        </td>
-                        <td>{{n.categorie}}</td>
-                        <td>{{n.prix }} frs</td>
-                        <td>{{n.quantite}}</td>
-                        <td><span class="stock-status status-high {{n.status }}  "> <span style="color: white;">{{n.status }}</span> </span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-small btn-view">
-                                    <a href="{% url 'voirprod' n.pk %}"> <i class="fas fa-eye"></i> </a>
-                                </button>
-
-                                <button class="btn btn-small btn-edit">
-                                    <a href="{% url 'modification' n.pk %}">  <i class="fas fa-edit"></i>  </a>
-                                </button>
-                                <button  id="btn-produit-sup" class="btn btn-small btn-delete" type="button"  title="Supprimer" data-bs-toggle="modal" data-bs-target="#Supprimer"   data-id="{{ n.pk }}" data-customer="{{n.nom}}" >
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-
-                        
-                    
-                   {% endfor %}
-
-
-                    
-                   
-
-
-                   
-                   
-
-                   
-
-
-                    
-                   
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                </tbody>
-            </table>
-
-
-                  
-
-            <!-- Pagination -->
-           
-        </div>
-
-
-
-
-
-
-        <!-- Modal suppression -->
-        <div class="modal fade" id="Supprimer" tabindex="-1" role="dialog" aria-labelledby="sexampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-danger" id="sexampleModalLabel">suppression du produit </h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post">
-                            {% csrf_token %}
-                            <input name="id_supprimer" type="hidden" id="id_supprimer">
-                            <label id="label_id_s" class="text-dark checkbox-inline"> <strong id="strong_id_s">etez vous sure de supprimer le produit  <span id="nom_produit" class="text-primary fw-bold"></span> ? </strong></label>
-
-                            <div class="modal-footer">
-                                <button type="button"  class="btn btn-danger" data-bs-dismiss="modal">NON</button>
-                                <button type="submit" class="btn btn-warning" >OUI</button>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- end modal-->
-
-
-
-
-
-
-    </div>
-    </div>
-
-
-
-
-
-     
-
-
-
-
-
-       
-
-
-
-
-
-                        
-
-
-         
-
-
-
-
     
-
-
-
-
+    
+    {% block content %}
+        
+    {% endblock content %}
+        
 
     <script>
         function toggleDropdown(id, element) {
@@ -644,41 +447,5 @@ nav ul li > a {
             }
         }
     </script>
-
-
-
-    <script>
-    /* fonction du scrit: ce script permet  de recuperer l'id et le nom du produit 
-       afin de les ajouter au niveau du modal de suppression
-
-    */
-
-    
-  document.addEventListener("DOMContentLoaded", function () {
-    // Sélectionne tous les boutons de suppression
-    const deleteButtons = document.querySelectorAll(".btn-delete");
-
-    deleteButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        // Récupère les données depuis les attributs data-
-        const customerName = button.getAttribute("data-customer");
-        const customerId = button.getAttribute("data-id");
-
-        // Insère les données dans le modal
-        document.getElementById("nom_produit").textContent = customerName;
-        document.getElementById("id_supprimer").value = customerId;
-      });
-    });
-  });
-</script>
-
-
-
-    <script src="{% static 'js/popper.js'%}"></script>
-    <script src="{% static 'js/bootstrap.js'%}"></script>
-
-
-  
-
 </body>
 </html>

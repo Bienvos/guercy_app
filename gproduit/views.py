@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from django.views.generic import  ListView, View
+from django.urls import reverse_lazy
+from django.views.generic import  ListView, View, UpdateView,DetailView
 from .models import fournisseurs, partenaires, produits, categories,vente,lignevente,client,Travailleurs
 from .forms import ProdForm, CategoriForm,FournissForm,venteForm,ClientForm,TravailleurForm
 from .fonctions import get_products
@@ -19,7 +20,7 @@ import pdfkit
 # def acceuil(request):
 #     return render(request,'index.html')
 
-class acceuil(ListView):
+class acceuil(View):
 
     """
     vue permettant de voir tout les prouduits 
@@ -27,8 +28,59 @@ class acceuil(ListView):
     """
 
     template_name='dashbord_h.html'
+    query = produits.objects.all()
 
-    queryset = produits.objects.all()
+    context = {
+        'produits': query
+    }
+
+
+    def get(self,request,*args,**kwargs):
+        return render(request, self.template_name, self.context)
+    
+
+
+    def post(self, request, *args,**kwargs):
+
+        #Recherche de Produit
+
+        # if request.POST['recherche']:
+        #     res =  request.POST['recherche']
+        #     print(res)
+
+        #     print(request.POST.get('recherche'))
+            
+        #     donnees = produits.objects.filter(nom__icontains = request.POST.get('recherche'))
+        #     self.context['donnees']=donnees
+
+        # suppression d'un produit
+
+        if request.POST.get('id_supprimer'):
+        
+
+            try:
+                obj = produits.objects.get(pk=request.POST.get('id_supprimer'))
+                obj.delete()
+                # messages.success(request, " Produit Supprimer  avec Succès !!!")
+
+            except Exception as e:
+                messages.error(request , f" l'identifiant du produit n'a pas été recuperer {e}")
+            
+
+            
+
+
+            
+
+
+            
+
+
+
+
+
+
+        return render(request, self.template_name,self.context)
 
 
 # class createcate(CreateView):
@@ -99,7 +151,13 @@ class Ajoutpro(View):
                 return redirect('craetep')
 
         return render(request, self.template_name , {'form1':form1,'form2': form2,'form3':form3})
-        
+
+class ModifPro(UpdateView):
+    model = produits
+    form_class = ProdForm
+    template_name = 'modifpro.html'
+    success_url= reverse_lazy('acceuil')
+
 
 # def createcate(request):
 
@@ -211,26 +269,7 @@ def ventepr(request):
 
                 return redirect('listevente')
 
-                # lg = vente.objects.get(pk=6)
-
-                # ld =lg.Lignes.all()
-
-                # for i in ld:
-                #     print(i.produit.nom)
-                #     print(i.quantite)
-                #     print(i.produit.prix)
-                #     print(i.totalp)
-                    
                 
-
-                
-                
-                # v = form.save(commit = False)
-                # p = v.produit
-                # vente.prix_unitaire = p.prix
-                # vente.total = p.prix * v.quantite
-                # vente.client =vente.client.nom
-                # v.save()
         
         if 'form1' in request.POST:
             form1 =ClientForm(request.POST)
@@ -413,8 +452,15 @@ def fourniss(request):
 
 
 def partenai(request):
+
     cl = partenaires.objects.all()
     return render(request, 'partenaire_p.html', {'partenaires':cl})
+
+
+class detailprod(DetailView):
+    model = produits
+    template_name = 'detailperso.html'
+    context_object_name = 'n'
 
 
 
