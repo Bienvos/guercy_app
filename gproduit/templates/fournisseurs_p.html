@@ -78,7 +78,7 @@
                 <td>{{f.email}}</td>
                 <td>{{f.Adresse}}</td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{% url 'produitfournisseur' fournisseur_id=f.pk %}" class="btn btn-sm btn-warning">Modifier</a>
                     <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
                 </td>
             </tr>

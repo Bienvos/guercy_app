@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Produits du Fournisseur</title>
+  <style>
+    /* --- Style fourni --- */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: Arial, sans-serif;
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0 10px 40px;
+      box-sizing: border-box;
+    }
+    .container {
+      background-color: white;
+      margin: 50px auto 0;
+      max-width: 1100px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      color: black;
+    }
+    .table th {
+      background-color: #764ba2;
+      color: white;
+    }
+    .btn {
+      margin: 5px 3px;
+    }
+    .page-title {
+      color: white;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    /* --- Compléments visuels harmonisés --- */
+    h1, h2, h3 {
+      margin: 0;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .supplier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f5f3ff;
+      border: 1px solid #e9d5ff;
+      border-radius: 999px;
+      font-size: 14px;
+      color: #5b21b6;
+      font-weight: 600;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+    }
+    .controls input, .controls select, .controls button {
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 0 12px;
+      font-size: 14px;
+      outline: none;
+      transition: box-shadow .2s ease;
+    }
+    .controls input:focus, .controls select:focus {
+      box-shadow: 0 0 0 4px rgba(118, 75, 162, .15);
+      border-color: #c4b5fd;
+    }
+    .btn-primary {
+      background: #764ba2;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-light {
+      background: #f3f4f6;
+      color: #111827;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-outline {
+      background: #fff;
+      color: #764ba2;
+      border: 1px solid #d8b4fe;
+      cursor: pointer;
+    }
+    .btn:hover { opacity: .95; }
+    .table-wrapper {
+      overflow: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+    th.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:hover td {
+      background: #faf5ff;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    .tag-success { color: #065f46; background: #ecfdf5; border-color: #a7f3d0; }
+    .tag-warning { color: #92400e; background: #fffbeb; border-color: #fcd34d; }
+    .tag-danger  { color: #991b1b; background: #fef2f2; border-color: #fecaca; }
+    .footer {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .pagination {
+      display: flex;
+      gap: 6px;
+    }
+    .pagination button {
+      padding: 8px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+    }
+    .pagination button.active {
+      background: #764ba2;
+      color: white;
+      border-color: #764ba2;
+    }
+    @media (max-width: 640px) {
+      .controls { grid-template-columns: 1fr; }
+      .container { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">Catalogue des produits du fournisseur</h1>
+
+  <div class="container">
+    <div class="card-header">
+      <div>
+        <div class="supplier-badge" id="supplierBadge">
+          <span>🏷️ Fournisseur :</span>
+          <span id="supplierName"> {{fournisseur.nom}} </span>
+        </div>
+        <div class="muted" id="supplierMeta">Email : {{fournisseur.email}} • Contact : {{fournisseur.contact}} • Mode de paiement : {{fournisseur.mode_payement}}</div>
+      </div>
+      <div class="muted" id="lastUpdate">Dernière mise à jour : —</div>
+    </div>
+
+    <div class="top-bar">
+      <div class="controls">
+        <input id="searchInput" type="text" placeholder="Rechercher un produit (nom, code)…" />
+        <select id="categoryFilter">
+          <option value="">Toutes les catégories</option>
+        </select>
+        <select id="stockFilter">
+          <option value="">Tous les statuts de stock</option>
+          <option value="in">En stock</option>
+          <option value="low">Stock faible</option>
+          <option value="out">Rupture</option>
+        </select>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="btn btn-light" id="btnExportCSV">Exporter CSV</button>
+          <button class="btn btn-outline" id="btnPrint">Imprimer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table" id="productsTable">
+        <thead>
+          <tr>
+            <th class="sticky" data-sort="string">Nom</th>
+            <th class="sticky" data-sort="string">Catégorie</th>
+            <th class="sticky" data-sort="number">Prix Unitaire</th>
+            <th class="sticky" data-sort="number">Quantité</th>
+            <th class="sticky" data-sort="number">Valeur Stock</th>
+            <th class="sticky" data-sort="string">Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          {% for p in produits %}
+          <tr>
+            <td> {{p.nom}}</td>
+            <td>{{p.categorie}}</td>
+            <td>{{p.prix}}</td>
+            <td>{{p.quantite}}</td>
+  
+          </tr>
+            
+          {% endfor %}
+            
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <div id="countInfo">0 produit</div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- Données d'exemple : remplacez par vos données dynamiques au besoin ---
+    const fournisseur = {
+      nom: "Société Alpha",
+      email: "contact@alpha.com",
+      contact: "+242 06 555 55 55",
+      mode_paiement: "Virement bancaire",
+      updated_at: new Date().toLocaleString('fr-FR')
+    };
+
+    const produits = [
+      { code: "PRD-001", nom: "Routeur Gigabit", categorie: "Réseau", prix: 45000, quantite: 12 },
+      { code: "PRD-002", nom: "Switch 24 ports", categorie: "Réseau", prix: 120000, quantite: 5 },
+      { code: "PRD-003", nom: "Câble Ethernet Cat6", categorie: "Accessoires", prix: 1500, quantite: 250 },
+      { code: "PRD-004", nom: "Onduleur 1500VA", categorie: "Énergie", prix: 95000, quantite: 2 },
+      { code: "PRD-005", nom: "Serveur Rack 2U", categorie: "Serveurs", prix: 2350000, quantite: 1 },
+      { code: "PRD-006", nom: "Point d'accès Wi‑Fi 6", categorie: "Réseau", prix: 98000, quantite: 18 },
+      { code: "PRD-007", nom: "Clavier mécanique", categorie: "Périphériques", prix: 38000, quantite: 0 },
+      { code: "PRD-008", nom: "SSD NVMe 1To", categorie: "Stockage", prix: 89000, quantite: 7 },
+      { code: "PRD-009", nom: "Borniers électriques", categorie: "Accessoires", prix: 2000, quantite: 30 },
+      { code: "PRD-010", nom: "Onduleur 1000VA", categorie: "Énergie", prix: 65000, quantite: 4 }
+    ];
+
+    // --- Initialisation entête fournisseur ---
+    document.getElementById('supplierName').textContent = fournisseur.nom;
+    document.getElementById('supplierMeta').textContent = `Email : ${fournisseur.email} • Contact : ${fournisseur.contact} • Mode de paiement : ${fournisseur.mode_paiement}`;
+    document.getElementById('lastUpdate').textContent = `Dernière mise à jour : ${fournisseur.updated_at}`;
+
+    // --- Helpers ---
+    const currency = (n) =>
+      new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', maximumFractionDigits: 0 }).format(n || 0);
+
+    function getStatusTag(qte) {
+      if (qte <= 0) return '<span class="tag tag-danger">Rupture</span>';
+      if (qte > 0 && qte <= 5) return '<span class="tag tag-warning">Stock faible</span>';
+      return '<span class="tag tag-success">En stock</span>';
+    }
+
+    // --- Rendu du tableau avec pagination, recherche, filtres et tri ---
+    const ROWS_PER_PAGE = 8;
+    let state = {
+      page: 1,
+      sortKey: null,
+      sortDir: 'asc',
+      search: '',
+      category: '',
+      stock: ''
+    };
+
+    const tbody = document.querySelector('#productsTable tbody');
+    const countInfo = document.getElementById('countInfo');
+    const pagination = document.getElementById('pagination');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const stockFilter = document.getElementById('stockFilter');
+    const searchInput = document.getElementById('searchInput');
+
+    // Remplir le filtre des catégories
+    [...new Set(produits.map(p => p.categorie))]
+      .sort()
+      .forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryFilter.appendChild(opt);
+      });
+
+    function applyFilters(items) {
+      return items.filter(p => {
+        const matchesSearch = [p.code, p.nom, p.categorie].join(' ').toLowerCase().includes(state.search.toLowerCase());
+        const matchesCategory = !state.category || p.categorie === state.category;
+        const status = p.quantite <= 0 ? 'out' : (p.quantite <= 5 ? 'low' : 'in');
+        const matchesStock = !state.stock || status === state.stock;
+        return matchesSearch && matchesCategory && matchesStock;
+      });
+    }
+
+    function sortItems(items) {
+      if (!state.sortKey) return items;
+      const sorted = [...items].sort((a, b) => {
+        const va = a[state.sortKey];
+        const vb = b[state.sortKey];
+        if (typeof va === 'number' && typeof vb === 'number') {
+          return state.sortDir === 'asc' ? va - vb : vb - va;
+        }
+        return state.sortDir === 'asc'
+          ? String(va).localeCompare(String(vb), 'fr', { sensitivity: 'base' })
+          : String(vb).localeCompare(String(va), 'fr', { sensitivity: 'base' });
+      });
+      return sorted;
+    }
+
+    function paginate(items) {
+      const start = (state.page - 1) * ROWS_PER_PAGE;
+      return items.slice(start, start + ROWS_PER_PAGE);
+    }
+
+    function render() {
+      const filtered = applyFilters(produits);
+      const sorted = sortItems(filtered);
+      const pageItems = paginate(sorted);
+
+      // corps du tableau
+      tbody.innerHTML = pageItems.map(p => `
+        <tr>
+          <td>${p.code}</td>
+          <td>${p.nom}</td>
+          <td>${p.categorie}</td>
+          <td>${currency(p.prix)}</td>
+          <td>${p.quantite}</td>
+          <td>${currency(p.prix * p.quantite)}</td>
+          <td>${getStatusTag(p.quantite)}</td>
+        </tr>
+      `).join('');
+
+      // infos et pagination
+      countInfo.textContent = \`\${filtered.length} produit\${filtered.length > 1 ? 's' : ''}\`;
+      renderPagination(Math.ceil(filtered.length / ROWS_PER_PAGE));
+    }
+
+    function renderPagination(pages) {
+      pagination.innerHTML = '';
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === state.page) btn.classList.add('active');
+        btn.addEventListener('click', () => { state.page = i; render(); });
+        pagination.appendChild(btn);
+      }
+      if (pages === 0) {
+        const btn = document.createElement('button');
+        btn.textContent = '1';
+        btn.classList.add('active');
+        pagination.appendChild(btn);
+      }
+    }
+
+    // Événements recherche & filtres
+    searchInput.addEventListener('input', (e) => {
+      state.search = e.target.value;
+      state.page = 1;
+      render();
+    });
+    categoryFilter.addEventListener('change', (e) => {
+      state.category = e.target.value;
+      state.page = 1;
+      render();
+    });
+    stockFilter.addEventListener('change', (e) => {
+      state.stock = e.target.value;
+      state.page = 1;
+      render();
+    });
+
+    // Tri par clic sur l'en-tête
+    document.querySelectorAll('#productsTable thead th').forEach((th, index) => {
+      const keys = ['code','nom','categorie','prix','quantite','valeur','statut'];
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', () => {
+        const keyMap = {
+          0: 'code', 1: 'nom', 2: 'categorie', 3: 'prix', 4: 'quantite', 5: 'valeur', 6: 'statut'
+        };
+        const chosen = keyMap[index];
+        if (chosen === 'valeur' || chosen === 'statut') {
+          // valeur et statut sont dérivés; trions selon prix*quantité ou quantité
+          state.sortKey = chosen === 'valeur' ? 'valeur' : 'quantite';
+        } else {
+          state.sortKey = chosen;
+        }
+        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+        state.page = 1;
+        render();
+      });
+    });
+
+    // Export CSV
+    document.getElementById('btnExportCSV').addEventListener('click', () => {
+      const filtered = applyFilters(produits);
+      const rows = [['Code','Nom','Catégorie','Prix Unitaire','Quantité','Valeur Stock','Statut']]
+        .concat(filtered.map(p => [
+          p.code, p.nom, p.categorie, p.prix, p.quantite, p.prix * p.quantite,
+          p.quantite <= 0 ? 'Rupture' : (p.quantite <= 5 ? 'Stock faible' : 'En stock')
+        ]));
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `produits_${fournisseur.nom.replace(/\s+/g,'_').toLowerCase()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Impression
+    document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+    // Pré-calcul de la valeur pour le tri dérivé
+    produits.forEach(p => p.valeur = p.prix * p.quantite);
+
+    // Rendu initial
+    render();
+  </script>
+</body>
+</html>

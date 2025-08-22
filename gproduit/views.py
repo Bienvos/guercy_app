@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.urls import reverse_lazy
 from django.views.generic import  ListView, View, UpdateView,DetailView
 from .models import fournisseurs, partenaires, produits, categories,vente,lignevente,client,Travailleurs
@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 import logging
 # from django.urls import reverse_lazy
+from django.db.models import Q
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,70 +19,111 @@ import pdfkit
 
 # Create your views here.
 
-# def acceuil(request):
-#     return render(request,'index.html')
+
 
 class acceuil(View):
+    template_name = 'dashbord_h.html'
 
-    """
-    vue permettant de voir tout les prouduits 
-    du stock 
-    """
+    def get_context_data(self, recherche=None):
+        """Retourne la liste des produits filtrés"""
+        q = produits.objects.all()
+        if recherche:
+            q = q.filter(
+                Q(nom__icontains=recherche) | Q(description__icontains=recherche)
+            )
+        return {
+            'requette': q,
+            'recherche': recherche
+        }
 
-    template_name='dashbord_h.html'
-    query = produits.objects.all()
+    def get(self, request, *args, **kwargs):
+        recherche = request.GET.get('recherche')
+        context = self.get_context_data(recherche)
+        return render(request, self.template_name, context)
 
-    context = {
-        'produits': query
-    }
+    def post(self, request, *args, **kwargs):
+        produit_id = request.POST.get('id_supprimer')
+        if produit_id:
+            try:
+                obj = get_object_or_404(produits, pk=produit_id)
+                obj.delete()
+                messages.success(request, "Produit supprimé avec succès ✅")
+            except Exception as e:
+                messages.error(request, f"Erreur : {e}")
+
+        # garder la recherche même après suppression
+        recherche = request.GET.get('recherche')
+        context = self.get_context_data(recherche)
+        return render(request, self.template_name, context)
 
 
-    def get(self,request,*args,**kwargs):
-        return render(request, self.template_name, self.context)
+
+
+# class acceuil(View):
+#     """
+#     Vue permettant de voir tous les produits 
+#     du stock 
+#     """
+#     template_name = 'dashbord_h.html'
+
+#     def get_context_data(self):
+#         """Toujours renvoyer les produits mis à jour"""
+#         return {
+#             'requette': produits.objects.all()
+#         }
+
+#     def get(self, request, *args, **kwargs):
+#         context = self.get_context_data()
+#         return render(request, self.template_name, context)
+
+#     def post(self, request, *args, **kwargs):
+        
+#         if request.POST.get('id_supprimer'):
+#             try:
+#                 # sécuriser la récupération avec get_object_or_404
+#                 obj = get_object_or_404(produits, pk=request.POST.get('id_supprimer'))
+#                 obj.delete()
+#                 messages.success(request, "Produit supprimé avec succès ✅")
+#             except Exception as e:
+#                 messages.error(request, f"Erreur : {e}")
+
+#         # recharger la liste mise à jour après suppression
+#         context = self.get_context_data()
+#         return render(request, self.template_name, context)
+
+# class acceuil(View):
+
+#     """
+#     vue permettant de voir tout les prouduits 
+#     du stock 
+#     """
+
+#     template_name='dashbord_h.html'
+#     q=produits.objects.all()
+
+#     context = {
+#         'requette': q
+#     }
+
+
+#     def get(self,request,*args,**kwargs):
+#         return render(request, self.template_name, self.context)
     
 
 
-    def post(self, request, *args,**kwargs):
+#     def post(self, request, *args,**kwargs):
+#        if request.POST.get('id_supprimer'):
+#         try:
+#                 obj = produits.objects.get(pk=request.POST.get('id_supprimer'))
+#                 obj.delete()
+#                 messages.success(request, " Produit Supprimer  avec Succès !!!")
 
-        #Recherche de Produit
-
-        # if request.POST['recherche']:
-        #     res =  request.POST['recherche']
-        #     print(res)
-
-        #     print(request.POST.get('recherche'))
-            
-        #     donnees = produits.objects.filter(nom__icontains = request.POST.get('recherche'))
-        #     self.context['donnees']=donnees
-
-        # suppression d'un produit
-
-        if request.POST.get('id_supprimer'):
+#         except Exception as e:
+#                 messages.error(request , f" l'identifiant du produit n'a pas été recuperer {e}")
         
 
-            try:
-                obj = produits.objects.get(pk=request.POST.get('id_supprimer'))
-                obj.delete()
-                # messages.success(request, " Produit Supprimer  avec Succès !!!")
-
-            except Exception as e:
-                messages.error(request , f" l'identifiant du produit n'a pas été recuperer {e}")
             
-
-            
-
-
-            
-
-
-            
-
-
-
-
-
-
-        return render(request, self.template_name,self.context)
+#         return render(request, self.template_name,self.context)
 
 
 # class createcate(CreateView):
@@ -152,11 +195,15 @@ class Ajoutpro(View):
 
         return render(request, self.template_name , {'form1':form1,'form2': form2,'form3':form3})
 
+
+
+
 class ModifPro(UpdateView):
     model = produits
     form_class = ProdForm
     template_name = 'modifpro.html'
-    success_url= reverse_lazy('acceuil')
+    success_url =reverse_lazy('acceuil')
+    
 
 
 # def createcate(request):
@@ -449,6 +496,15 @@ def clients_e(request):
 def fourniss(request):
     cl = fournisseurs.objects.all()
     return render(request, 'fournisseurs_p.html', {'fournisseurs':cl})
+
+
+def produits_par_fournisseur(request, fournisseur_id):
+    fournisseur = get_object_or_404(fournisseurs, id=fournisseur_id)
+    produits_list = fournisseur.mes_produits.all()  # ou fournisseur.mes_produits.all()
+    return render(request, "produits_fournisseur.html", {
+        "fournisseur": fournisseur,
+        "produits": produits_list
+    })
 
 
 def partenai(request):

@@ -54,7 +54,7 @@ class produits(models.Model):
     date_livraison = models.DateField()
     date_ajout = models.DateTimeField(auto_now_add = True)
     data_exp = models.DateField(null =True , blank = True)
-    fournisseur = models.ForeignKey(fournisseurs,on_delete=models.CASCADE)
+    fournisseur = models.ForeignKey(fournisseurs,on_delete=models.CASCADE,related_name="mes_produits" )
     observation = models.TextField()
     # vente = models.ManyToManyField(vente , related_name ="vpp")
     # image = models.ImageField(null =True , blank = True, upload_to ='/media')

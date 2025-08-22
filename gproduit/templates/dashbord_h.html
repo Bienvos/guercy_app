@@ -8,6 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
+
     <style>
         * {
             margin: 0;
@@ -472,13 +474,26 @@ nav ul li > a {
             </div>
 
             <!-- Search Bar -->
-            <div class="search-bar">
+            <form method="get" action="">
+                <div class="search-bar">
+                    <input type="text" class="search-input" 
+                        name="recherche" 
+                        placeholder="Rechercher un produit..." 
+                        value="{{ recherche|default:'' }}">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-search"></i>
+                        Rechercher
+                    </button>
+                </div>
+          </form>
+
+            <!-- <div class="search-bar">
                 <input type="text" class="search-input" name="recherche" placeholder="Rechercher un produit...">
                 <button type="submit" class="btn" >
                     <i class="fas fa-search"></i>
                     Rechercher
                 </button>
-            </div>
+            </div> -->
 
             <!-- Products Table -->
             <table class="products-table">
@@ -496,9 +511,9 @@ nav ul li > a {
                    
                    
                    
-                   {% for n  in produits %}
+                   {% for n  in requette %}
 
-                     <tr>
+                    <tr>
                         <td>
                             <strong> {{n.nom}}</strong>
                             <br><small>REF: LP-001</small>
@@ -510,14 +525,14 @@ nav ul li > a {
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-small btn-view">
-                                    <a href="{% url 'voirprod' n.pk %}"> <i class="fas fa-eye"></i> </a>
+                                    <a href="{% url 'voirprod' n.pk %}"> <i class="fas fa-eye" style="color: white;"></i> </a>
                                 </button>
 
                                 <button class="btn btn-small btn-edit">
-                                    <a href="{% url 'modification' n.pk %}">  <i class="fas fa-edit"></i>  </a>
+                                    <a href="{% url 'modification' pk=n.pk %}">  <i class="fas fa-edit" style="color: white;"></i>  </a>
                                 </button>
                                 <button  id="btn-produit-sup" class="btn btn-small btn-delete" type="button"  title="Supprimer" data-bs-toggle="modal" data-bs-target="#Supprimer"   data-id="{{ n.pk }}" data-customer="{{n.nom}}" >
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash" ></i>
                                 </button>
                             </div>
                         </td>
